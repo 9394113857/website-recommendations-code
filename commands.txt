@@ -1,0 +1,8 @@
+PS D:\website-recommendations-code> cd ..
+PS D:\> cd ..
+PS D:\> cd .\website-recommendations-env\ 
+PS D:\website-recommendations-env> cd .\Scripts\
+PS D:\website-recommendations-env\Scripts> .\activate
+(website-recommendations-env) PS D:\website-recommendations-env\Scripts> 
+
+
