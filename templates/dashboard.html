@@ -4,17 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Dashboard</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function sendInteractionData(action) {
+                fetch('/record_interaction', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: action,
+                        page: 'dashboard'
+                    })
+                });
+            }
+
+            // Example: Send interaction data when a button is clicked
+            document.getElementById('some-button').addEventListener('click', function() {
+                sendInteractionData('button_click');
+            });
+        });
+    </script>
 </head>
 <body>
     <h1>User Dashboard</h1>
-    <h2>Welcome, {{ session['username'] }}</h2>
+    <h2>Welcome, {{ user.username }}</h2>
     <h3>Recommendations:</h3>
     <ul>
-        {% for recommendation in recommendations %}
-        <li>{{ recommendation }}</li>
-        {% endfor %}
+        <!-- Display user recommendations here -->
     </ul>
-    <a href="{{ url_for('index') }}">Go to Index Page</a>
+    <button id="some-button">Click Me</button>
+    <!-- <a href="{{ url_for('index') }}">Go to Index Page</a> -->
     <a href="{{ url_for('logout') }}">Logout</a>
 </body>
 </html>

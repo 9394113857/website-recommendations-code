@@ -1,7 +1,9 @@
-from flask import Flask, render_template, request, session, redirect, url_for, current_app
+from flask import Flask, render_template, request, session, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 import os
+
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -15,6 +17,14 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
 
+class UserActivity(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, nullable=False)
+    action = db.Column(db.String(50), nullable=False)
+    page = db.Column(db.String(50), nullable=False)
+    interaction_time = db.Column(db.String(19), nullable=False)  # Assuming interaction_time is stored as text in ISO 8601 format 'YYYY-MM-DD HH:MM:SS'
+
+
 def create_database():
     if not os.path.exists('recommendations.db'):
         with app.app_context():
@@ -22,9 +32,7 @@ def create_database():
 
 def create_tables():
     with app.app_context():
-        inspector = db.inspect(db.engine)
-        if not inspector.has_table('users'):
-            db.create_all()
+        db.create_all()
 
 @app.route('/')
 def index():
@@ -44,9 +52,7 @@ def register():
         new_user = User(username=username, email=email, password_hash=password_hash)
         db.session.add(new_user)
         db.session.commit()
-        session['user_id'] = new_user.id
-        session['username'] = new_user.username
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('login'))  # Redirect to login page after registration
     return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -77,6 +83,31 @@ def dashboard():
         return render_template('dashboard.html', user=user)
     else:
         return redirect(url_for('login'))
+
+@app.route('/record_interaction', methods=['POST'])
+def record_interaction():
+    if 'user_id' in session:
+        try:
+            user_id = session['user_id']
+            data = request.get_json()
+            action = data.get('action')
+            page = data.get('page')
+
+            if action and page:
+                # Generate current timestamp
+                interaction_time = datetime.now()
+
+                new_interaction = UserActivity(user_id=user_id, action=action, page=page, interaction_time=interaction_time)
+                db.session.add(new_interaction)
+                db.session.commit()
+                return 'Interaction recorded successfully'
+            else:
+                return 'Invalid data received for recording interaction', 400  # Bad request status code
+        except Exception as e:
+            return f'Error recording interaction: {str(e)}', 500  # Internal server error status code
+    else:
+        return 'User not logged in', 401  # Unauthorized status code
+
 
 if __name__ == '__main__':
     create_database()
