@@ -1,8 +1,17 @@
-PS D:\website-recommendations-code> cd ..
-PS D:\> cd ..
-PS D:\> cd .\website-recommendations-env\ 
-PS D:\website-recommendations-env> cd .\Scripts\
-PS D:\website-recommendations-env\Scripts> .\activate
-(website-recommendations-env) PS D:\website-recommendations-env\Scripts> 
+# Change directory to the virtual environment's Scripts directory
+cd /d D:\website-recommendations-env\Scripts\
 
+# Activate the virtual environment
+call activate
 
+# Change directory back to your code directory
+cd /d D:\website-recommendations-code\
+
+# Run your app.py file
+py app.py
+
+# Change directory to the virtual environment's Scripts directory
+cd /d D:\website-recommendations-env\Scripts\
+
+# Deactivate the virtual environment
+call deactivate
