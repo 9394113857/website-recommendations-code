@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Recommendations</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Website Recommendations</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('dashboard') }}">View Dashboard</a></li>
+                <!-- Add links to registration and login pages -->
+                <li><a href="{{ url_for('register') }}">Register</a></li>
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>Welcome to our website!</h2>
+        <p>We provide personalized recommendations for you.</p>
+    </main>
+    <footer>
+        <p>&copy; 2024 Website Recommendations. All rights reserved.</p>
+    </footer>
+</body>
+</html>
